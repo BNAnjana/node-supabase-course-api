@@ -3,6 +3,15 @@ const router = Router();
 import supabase from '../supabaseClient.js';
 import validateEnrollment from '../middleware/validateEnrollment.js';
 
+router.post('/courses', async (req, res) => {
+  const { id, title, instructor } = req.body;
+  const { data, error } = await supabase('courses')
+    .insert([{ id, title, instructor }]);
+
+  if (error) return res.status(500).json({ error: error.message });
+  res.status(201).json(data);
+});
+
 // 1. Get All Courses
 router.get('/courses', async (req, res) => {
   const { data, error } = await supabase('courses').select('*');
